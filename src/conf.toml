@@ -5,4 +5,8 @@ descr = 'A flood loss game based on the work of Dr. John Hillier.'
 [map]
 title = 'Flood map'
 mapbox_token = 'pk.eyJ1IjoibGNvdXJ0eSIsImEiOiJjamdmOWU2YzkwZXIwMnF0ODg4aGlydWc2In0.OdlynoCYdGnF9CppvwsKvw'
-center = { lat = -7.0, lon = 110.42 }  # Semarang
+center = {lat = -7.0, lon = 110.42}  # Semarang
+
+[zone]
+extent = {latmin = -7.23, latmax = -6.93, lonmin = 110.11, lonmax = 110.64}
+
