@@ -5,7 +5,7 @@ import toml
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 
 # local import
 import game
@@ -34,6 +34,24 @@ app.scripts.config.serve_locally=True
     # ~ }
 # ~ }
 
+# Default map
+map_data = [{'type': 'scattermapbox',
+            'lat':[],
+            'lon': [],
+           }]
+
+map_layout = {'autosize': True,
+              'overmode': 'closest',
+              'mapbox': {'accesstoken': conf['map']['mapbox_token'],
+                         'bearing': conf['map']['bearing'],
+                         'center': conf['map']['center'],
+                         'pitch': conf['map']['pitch'],
+                         'zoom': conf['map']['zoom']
+                         },
+              'title': conf['map']['title'],
+              "height": conf['map']['height']
+             }
+
 app.layout = html.Div(children=[
     html.H1(children=conf['app']['title']),
 
@@ -44,15 +62,19 @@ app.layout = html.Div(children=[
 
     # input number of points
     dcc.Input(id='input-npoints', value='number of points', type='integer'),
+    html.Button('Submit', id='submit-button'),
     # Map
-    dcc.Graph(id='main-map')
+    dcc.Graph(id='main-map', figure={'data': map_data, 'layout': map_layout})
 ])
 
 
 @app.callback(Output('main-map', 'figure'),
-              [Input(component_id='input-npoints', component_property='value')]
+              [Input('submit-button', 'n_clicks')],
+              [State('input-npoints', 'value')]
              )
-def update_map(n_points):
+def update_map(n_clicks, n_points):
+    """Draw the map
+    """
 
     points_lat, points_lon = game.distribute_inhabited_points(conf['zone']['extent'],
                                                               int(n_points))
@@ -68,13 +90,13 @@ def update_map(n_points):
     map_layout = {'autosize': True,
                   'overmode': 'closest',
                   'mapbox': {'accesstoken': conf['map']['mapbox_token'],
-                             'bearing': 0,
+                             'bearing': conf['map']['bearing'],
                              'center': conf['map']['center'],
-                             'pitch': 0,
-                             'zoom': 9
+                             'pitch': conf['map']['pitch'],
+                             'zoom': conf['map']['zoom']
                              },
                   'title': conf['map']['title'],
-                  "height": 700
+                  "height": conf['map']['height']
                  }
 
     return {'data': map_data, 'layout': map_layout}
