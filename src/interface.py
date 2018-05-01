@@ -76,8 +76,8 @@ def update_map(n_clicks, n_points):
     """Draw the map
     """
 
-    points_lat, points_lon = game.distribute_inhabited_points(conf['zone']['extent'],
-                                                              int(n_points))
+    points_lat, points_lon = game.distribute_points(conf['zone']['extent'],
+                                                    int(n_points))
 
     map_data = [{'type': 'scattermapbox',
                 'lat': points_lat,
